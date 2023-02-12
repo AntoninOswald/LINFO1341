@@ -206,6 +206,52 @@ int recv_and_handle_message(const struct sockaddr *src_addr, socklen_t addrlen) 
 }
 
 
+int recv_and_handle_message(const struct sockaddr *src_addr, socklen_t addrlen) {
+    // TODO: Create a IPv6 socket supporting datagrams
+
+    int sock = socket(AF_INET6, SOCK_DGRAM, 0);             // create a socket using IPv6 addresses
+    if (sock == -1) {
+        return -1;
+    }
+    // TODO: Bind it to the source
+
+    int err = bind(sock, src_addr, addrlen);  // assign our address to the socket
+    if (err == -1) {
+        return -1;
+    }
+    // TODO: Receive a message through the socket
+
+
+    struct sockaddr_storage peer_addr;  // allocate the peer's address on the stack. It will be initialized when we receive a message
+    socklen_t peer_addr_len = sizeof(struct sockaddr_storage); // variable that will contain the length of the peer's address
+    char buffer[1024];  // allocate a buffer of MAX_MESSAGE_SIZE bytes on the stack
+    ssize_t n_received = recvfrom(sock, buffer, 1024, 0, (struct sockaddr *) &peer_addr, &peer_addr_len);
+    if (n_received == -1) {
+        return -1;
+    }
+    int sum = 0;
+
+    for (int i = 0; i < n_received; i+= sizeof(int))
+    {
+        sum = sum + ntohl(*(int *)(buffer+i)); //convertir dans la convention de la machine
+    }
+
+    // TODO: Send back the result
+
+    //attention,il faut reconvertir le résultat dans l'autre sens
+
+
+    char result[32];
+    sprintf(result,"%d",sum);
+    int res = htonl(sum);
+    ssize_t sent = sendto(sock, result, sizeof(result),0, (struct sockaddr *) &peer_addr, peer_addr_len);
+    if (sent == -1) {
+        return -1;
+    }
+    return 0;
+}
+
+
 
 
 int main(int argc, char **argv){
