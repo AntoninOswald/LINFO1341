@@ -251,6 +251,48 @@ int recv_and_handle_message(const struct sockaddr *src_addr, socklen_t addrlen) 
     return 0;
 }
 
+struct message
+{
+    char header;  //uint8 ?
+    char payload[256];
+
+};
+
+
+
+/**
+ * `ints` is a pointer to a buffer of `no_int` integers.
+ * `operation` is char representing the operation to request, '+' being the sum, and '*' being the multiplication.
+ * `output_format` is char representing the output format to request, 'd' being network-ordered integers and 's' being ASCII strings.
+ */
+int create_and_send_message(const struct sockaddr *dest_addr, socklen_t addrlen, int *ints, size_t no_int, char operation, char output_format, int *result) {
+    // TODO: Create a socket supporting datagrams
+
+    int sock = socket(AF_INET6, SOCK_DGRAM, 0);             // create a socket using IPv6 addresses
+    if (sock == -1) {
+        return -1;
+    }
+    // TODO: Connect the socket
+
+    int err = connect(sock, dest_addr, addrlen);
+
+    if (err == -1)
+    {
+        return -1;
+    }
+    // TODO: Create the request message and send it
+
+    //simplement lire les spécifications dans l'ordre
+
+    
+
+
+
+
+    // TODO: Receive the result and return it using the result argument
+    return 0;
+}
+
 
 
 
