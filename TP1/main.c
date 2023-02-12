@@ -251,13 +251,14 @@ int recv_and_handle_message(const struct sockaddr *src_addr, socklen_t addrlen) 
     return 0;
 }
 
-struct message
-{
-    char header;  //uint8 ?
+
+typedef struct{
+
+    int unused:4;
+    int op:3;
+    int output:1;
     char payload[256];
-
-};
-
+} header;
 
 
 /**
@@ -283,6 +284,28 @@ int create_and_send_message(const struct sockaddr *dest_addr, socklen_t addrlen,
     // TODO: Create the request message and send it
 
     //simplement lire les spécifications dans l'ordre
+
+    header message;
+
+    message.unused = 0;
+    
+
+    if (operation == '+')
+    {
+        message.op = 0;
+    }
+
+    if (operation == '*')
+    {
+        message.op = 1;
+    }
+    
+    
+
+    
+
+
+
 
     
 
