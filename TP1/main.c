@@ -299,6 +299,20 @@ int create_and_send_message(const struct sockaddr *dest_addr, socklen_t addrlen,
     {
         message.op = 1;
     }
+
+    if (output_format == 'd')
+    {
+        message.output = 0;
+    }
+
+    if (output_format == 's')
+    {
+        message.output = 1;
+    }
+
+    
+    
+    
     
     
 
