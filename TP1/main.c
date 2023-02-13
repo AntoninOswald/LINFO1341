@@ -252,13 +252,6 @@ int recv_and_handle_message(const struct sockaddr *src_addr, socklen_t addrlen) 
 }
 
 
-typedef struct{
-
-    int unused:4;
-    int op:3;
-    int output:1;
-    char payload[256];
-} header;
 
 
 /**
@@ -285,51 +278,78 @@ int create_and_send_message(const struct sockaddr *dest_addr, socklen_t addrlen,
 
     //simplement lire les spécifications dans l'ordre
 
-    header message;
-
-    message.unused = 0;
-    
+    unsigned char header;
 
     if (operation == '+')
     {
-        message.op = 0;
-    }
+        if (output_format == 'd'){
 
-    if (operation == '*')
+            header = 0b00000000;
+
+        } else if (output_format == 's'){
+
+            header = 0b00000001;
+    
+        } else return -1;
+        
+    } else if (operation == '*')
     {
-        message.op = 1;
-    }
+        if (output_format == 'd'){
 
-    if (output_format == 'd')
+            header = 0b00001110;
+            
+        
+        } else if (output_format == 's'){
+            
+            header = 0b00001111;
+        } else return -1;
+
+    } else {return -1;}
+
+
+    char *buffer = (char *)malloc(sizeof(int)*no_int+1);
+
+    buffer[0] = header;
+    for (size_t i = 0; i < no_int; i++)
     {
-        message.output = 0;
+        int tosend = htonl(ints[i]);
+        memcpy(buffer+i*sizeof(int)+1, &tosend,sizeof(int));
     }
 
-    if (output_format == 's')
+    int res = send(sock,buffer,sizeof(buffer),0);
+    if(res == -1){
+        free(buffer);
+        return -1;
+    }
+
+    free(buffer);
+    
+    struct sockaddr_storage peer_addr;  // allocate the peer's address on the stack. It will be initialized when we receive a message
+    socklen_t peer_addr_len = sizeof(struct sockaddr_storage); // variable that will contain the length of the peer's address
+    char *buf = (char *)malloc(256+1);  // allocate a buffer of MAX_MESSAGE_SIZE bytes on the stack
+    ssize_t n_received = recvfrom(sock, buf, 256+1, 0, (struct sockaddr *) &peer_addr, &peer_addr_len);
+    if (n_received == -1) {
+        return -1;
+    }
+
+    int a = (int) ntohl(buf[0]) & (1 << 7);
+
+
+    if (a == 0)
     {
-        message.output = 1;
+        return -1;
     }
 
-    
-    
-    
-    
-    
+    int final = (int)ntohl(buf[1]);
 
+    memcpy(result,&final,sizeof(int));
+
+    return *result;
     
-
-
-
-
-    
-
-
 
 
     // TODO: Receive the result and return it using the result argument
-    return 0;
 }
-
 
 
 
