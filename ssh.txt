@@ -1,0 +1,10 @@
+AS number = 74
+IP = 130.104.229.47
+password for as : 06c2015a4a94b3c6
+
+Connecting to as = ssh -J aoswald@studssh.info.ucl.ac.be -p 2074 root@130.104.229.47
+
+Connecting to website : ssh -L 8080:130.104.229.47:80 aoswald@studssh.info.ucl.ac.be
+
+
+connecting to studssh: ssh -i <cle_privee> <login_ingi>@studssh.info.ucl.ac.be
