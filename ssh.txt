@@ -13,4 +13,6 @@ connecting to studssh: ssh -i <cle_privee> <login_ingi>@studssh.info.ucl.ac.be
 Saving the configuration : scp -P 2074 -J aoswald@studssh.info.ucl.ac.be root@ip:~/config .
 
 
-https://stackoverflow.com/questions/41908379/keras-plot-training-validation-and-test-set-accuracy
+Site http://127.0.0.1:8080/matrix
+
+
