@@ -10,7 +10,7 @@ Connecting to website : ssh -L 8080:130.104.229.47:80 aoswald@studssh.info.ucl.a
 connecting to studssh: ssh -i <cle_privee> <login_ingi>@studssh.info.ucl.ac.be
 
 
-Saving the configuration : scp -P 2074 -J aoswald@studssh.info.ucl.ac.be root@ip:~/config .
+Saving the configuration : scp -O -J aoswald@studssh.info.ucl.ac.be -P 2074 root@130.104.229.47:~/configs_<date>_<heure>.zip .
 
 
 Site http://127.0.0.1:8080/matrix
